@@ -15,6 +15,7 @@ public class Task {
     private String description;
     private String status; // np. "TODO", "IN_PROGRESS", "DONE"
     private String teamId;
-    private String assignedTo; // opcjonalne UID przypisanego użytkownika
+    private String assignedTo; // przypisany użytkownik
+    private String priority; // np. LOW, MEDIUM, HIGH
     private long createdAt;
 }

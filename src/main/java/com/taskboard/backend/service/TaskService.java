@@ -59,6 +59,7 @@ public class TaskService {
             existingTask.setDescription(updatedTask.getDescription());
             existingTask.setStatus(updatedTask.getStatus());
             existingTask.setAssignedTo(updatedTask.getAssignedTo());
+            existingTask.setPriority(updatedTask.getPriority());
             
             docRef.set(existingTask).get();
             log.info("Task updated with ID: {}", taskId);
