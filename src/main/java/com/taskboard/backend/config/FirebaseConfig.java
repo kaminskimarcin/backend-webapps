@@ -28,9 +28,13 @@ public class FirebaseConfig {
     @PostConstruct
     public void initialize() {
         try {
-            Resource resource = resourceLoader.getResource(credentialPath);
+            String resolvedPath = credentialPath;
+            if (!resolvedPath.startsWith("classpath:") && !resolvedPath.startsWith("file:")) {
+                resolvedPath = "file:" + resolvedPath;
+            }
+            Resource resource = resourceLoader.getResource(resolvedPath);
             if (!resource.exists()) {
-                log.warn("Firebase credential file not found at path: {}. Firebase will not be initialized if default credentials are not present.", credentialPath);
+                log.warn("Firebase credential file not found at path: {}. Firebase will not be initialized if default credentials are not present.", resolvedPath);
                 return;
             }
 
