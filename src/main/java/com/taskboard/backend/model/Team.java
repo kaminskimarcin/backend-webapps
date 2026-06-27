@@ -15,4 +15,14 @@ public class Team {
     private String id;
     private String name;
     private List<String> members; // Lista identyfikatorów UID użytkowników
+    
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class TeamMember {
+        private String uid;
+        private String displayName;
+        private String email;
+    }
 }

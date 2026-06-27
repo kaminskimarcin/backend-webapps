@@ -68,4 +68,41 @@ public class TeamService {
             throw new IllegalArgumentException("Team not found");
         }
     }
+
+    public void deleteTeam(String teamId) throws ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        db.collection(COLLECTION_NAME).document(teamId).delete().get();
+        log.info("Team deleted with ID: {}", teamId);
+    }
+
+    public List<Team.TeamMember> getTeamMembers(String teamId) throws ExecutionException, InterruptedException {
+        Firestore db = FirestoreClient.getFirestore();
+        Team team = db.collection(COLLECTION_NAME).document(teamId).get().get().toObject(Team.class);
+        
+        List<Team.TeamMember> members = new ArrayList<>();
+        if (team == null || team.getMembers() == null) return members;
+
+        for (String uid : team.getMembers()) {
+            try {
+                com.google.firebase.auth.UserRecord userRecord = com.google.firebase.auth.FirebaseAuth.getInstance().getUser(uid);
+                String displayName = userRecord.getDisplayName();
+                if (displayName == null || displayName.isEmpty()) {
+                    displayName = userRecord.getEmail();
+                }
+                if (displayName == null) {
+                    displayName = "Nieznany (" + uid.substring(0, 5) + ")";
+                }
+                
+                members.add(Team.TeamMember.builder()
+                        .uid(uid)
+                        .displayName(displayName)
+                        .email(userRecord.getEmail())
+                        .build());
+            } catch (Exception e) {
+                log.warn("Could not fetch user {}", uid);
+                members.add(Team.TeamMember.builder().uid(uid).displayName("Nieznany (" + uid.substring(0, 5) + ")").build());
+            }
+        }
+        return members;
+    }
 }

@@ -56,6 +56,26 @@ public class TeamController {
         }
     }
 
+    @DeleteMapping("/{teamId}")
+    public ResponseEntity<Void> deleteTeam(@PathVariable String teamId) {
+        try {
+            teamService.deleteTeam(teamId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/{teamId}/members")
+    public ResponseEntity<List<Team.TeamMember>> getTeamMembers(@PathVariable String teamId) {
+        try {
+            List<Team.TeamMember> members = teamService.getTeamMembers(teamId);
+            return ResponseEntity.ok(members);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @Data
     public static class TeamCreateRequest {
         private String name;
