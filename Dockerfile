@@ -10,8 +10,8 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Etap 2: Tworzenie lekkiego obrazu końcowego z JRE
-FROM eclipse-temurin:17-jre-alpine
+# Etap 2: Tworzenie lekkiego obrazu końcowego z JRE (wersja oparta o glibc - jammy, dla Firebase Admin/gRPC)
+FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 
 # Kopiujemy zbudowany .jar z poprzedniego etapu
